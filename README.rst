@@ -11,7 +11,7 @@ to publish a package:
 - Run unit tests in local
 - If ``ci`` is True in config, wait before creating the tag that the CI tools gave a positive answer
 - Create tag from version defined above and push tags
-- Update the package to PyPi
+- Upload the package to PyPi
 
 
 Configuration File Reference
