@@ -1,0 +1,17 @@
+# language: python
+
+checks:
+    python:
+        code_rating: true
+        duplicate_code: true
+        variables_used_before_assignment: true
+        variables_unused_wildcard_import: true
+        variables_unused_variable: true
+        variables_unused_import: true
+        variables_unused_argument: true
+        variables_unpacking_non_sequence: true
+        variables_undefined_variable: true
+        variables_undefined_all_variable: true
+        variables_undefined_loop_variable: true
+        variables_unbalanced_tuple_unpacking: true
+        variables_redefined_outer_name: true

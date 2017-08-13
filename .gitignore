@@ -1,0 +1,28 @@
+# Ignore Python build artifacts.
+.cache
+MANIFEST
+build/
+dist/
+*.egg-info/
+*.pyc
+*.pyo
+
+
+# Ignore virtualenv environments.
+venv*/
+
+
+# Ignore settings for various IDEs.
+.idea/
+.project/
+.pydevproject/
+nbproject/
+
+
+# Ignore OS metadata files.
+.DS_Store
+
+
+# Ignore Tests
+.coverage
+htmlcov

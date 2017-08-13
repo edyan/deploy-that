@@ -1,0 +1,5 @@
+language: python
+files:
+    - testclick.py
+    - wrongfile.py
+tests_dir: tests/test_wrong.py

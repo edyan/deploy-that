@@ -1,0 +1,22 @@
+type: object
+properties:
+    language:
+        type: string
+        enum: [python, php]
+    # List of files to patch
+    # only the lines with the old version number + a keyword "version" will be changed
+    files:
+        type: array
+        items:
+            type: string
+    tests_dir:
+        type: string
+    git:
+        type: object
+        properties:
+            push_branch:
+                type: string
+    # CI tools running, which means 2 push and a prompt
+    ci:
+        type: boolean
+required: [language, files]

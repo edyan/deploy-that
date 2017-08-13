@@ -1,0 +1,4 @@
+tests_dir: tests/
+git:
+    push_branch: master
+ci: true
