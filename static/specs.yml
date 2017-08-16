@@ -16,6 +16,12 @@ properties:
         properties:
             push_branch:
                 type: string
+            # github repo where to create the release
+            repo:
+                type: string
+            token:
+                type: string
+        required: [repo, token]
     # CI tools running, which means 2 push and a prompt
     ci:
         type: boolean

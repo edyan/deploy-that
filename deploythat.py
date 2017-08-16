@@ -4,6 +4,7 @@ import click_log
 import logging
 import os
 import re
+import requests
 import subprocess
 import sys
 from pkg_resources import parse_version
@@ -85,17 +86,43 @@ class DeployThat():
 
 
     def create_tag_and_push(self):
-        if parse_version(self.new_version) == parse_version(self.current_version):
-            logger.warning('Not a new version, do not create tag')
-            return
+        conf = self.config['git']
 
+        try:
+            r = requests.get(
+                'https://api.github.com/repos/{0}/releases?access_token={1}'.format(conf['repo'], conf['token']))
+            releases = r.json()
+        except:
+            raise Exception("Can't check if release exists. Make sure your github token is correct")
+
+        release_name = 'v' + str(self.new_version)
+        for release in releases:
+            if release['tag_name'] == release_name:
+                logger.info('Release {} already exists in GitHub'.format(release_name))
+                return
+
+        logger.info('Release {} does not exist in GitHub, creating'.format(release_name))
         click.echo('\n' + '-'*30)
         click.echo('Latest commits messages: \n' + self._get_logs().strip())
         click.echo('-'*30 + '\n')
         prompt = 'Type your tag message'
         tag_msg = click.prompt(prompt, default='New version ' + str(self.new_version), type=str)
-        self._run_cmd(['git', 'tag', '-a', 'v' + str(self.new_version), '-m', '"' + tag_msg + '"'])
-        self._run_cmd(['git', 'push', '--tags'])
+
+        data = {
+            'tag_name': release_name,
+            'target_commitish': conf['push_branch'],
+            'name': release_name,
+            'body': tag_msg,
+            }
+        self._logger.debug('Posting: {}'.format(data))
+        r = requests.post(
+            'https://api.github.com/repos/{0}/releases?access_token={1}'.format(conf['repo'], conf['token']),
+            json=data)
+        if r.status_code != 201:
+            raise Exception("Can't create the release on github : {}".format(r.text))
+
+        self._logger.info('Release created')
+        self._run_cmd(['git', 'pull', 'origin', conf['push_branch']])
 
 
     def push(self):
@@ -233,7 +260,19 @@ class DeployThat():
 
 
     def _send_to_pypi(self):
-        """After pushing again, for PHP packages only"""
+        """After pushing again, for Python packages only"""
+        package = self._run_cmd(['python', 'setup.py', '--name']).strip()
+
+        try:
+            r = requests.get('https://pypi.python.org/pypi/{}/json'.format(package))
+            current_version = r.json()['info']['version']
+        except Exception as e:
+            logger.warning('Error from pypi when checking for package existence : {}'.format(e))
+
+        if current_version == self.new_version:
+            logger.info('Package already present on PyPi with that version')
+            return
+
         logger.info('Sending your package to pypi')
         self._run_cmd(['python', 'setup.py', 'sdist', 'bdist_wheel'])
         self._run_cmd(['twine', 'upload', 'dist/*-{}.tar.gz'.format(self.new_version)])

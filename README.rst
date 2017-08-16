@@ -11,7 +11,7 @@ to publish a package:
 - Run unit tests in local
 - If ``ci`` is True in config, wait before creating the tag that the CI tools gave a positive answer
 - Create tag from version defined above and push tags
-- Upload the package to PyPi
+- Update the package to PyPi
 
 
 Configuration File Reference
@@ -25,6 +25,8 @@ Parameters:
 - ``tests_dir`` : Directory where to find tests (``tests/`` by default)
 - ``git`` :
     - ``push_branch`` : the branch where to push
+    - ``repo`` : the repo's name to create releases
+    - ``token`` : API Token to interact with github
 - ``ci`` : true by default, can be false to avoid the tool to ask questions
 
 
