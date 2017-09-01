@@ -263,6 +263,7 @@ class DeployThat():
         """After pushing again, for Python packages only"""
         package = self._run_cmd(['python', 'setup.py', '--name']).strip()
 
+        current_version = None
         try:
             r = requests.get('https://pypi.python.org/pypi/{}/json'.format(package))
             current_version = r.json()['info']['version']
