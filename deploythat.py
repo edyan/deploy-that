@@ -302,7 +302,7 @@ class DeployThat():
 
 
 @click.command()
-@click.version_option('0.1a1')
+@click.version_option('0.2')
 @click_log.simple_verbosity_option(logger)
 @click.option('--config', '-c', help='Config file location', type=click.STRING)
 @click.option('--verbose', '-v', default=False, is_flag=True, help='Verbose mode')
