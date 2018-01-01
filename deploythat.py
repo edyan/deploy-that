@@ -9,6 +9,7 @@ import subprocess
 import sys
 from pkg_resources import parse_version
 logger = logging.getLogger(__name__)
+click_log.basic_config(logger)
 
 
 class DeployThat():
@@ -302,7 +303,7 @@ class DeployThat():
 
 @click.command()
 @click.version_option('0.1a1')
-@click_log.init(__name__)
+@click_log.simple_verbosity_option(logger)
 @click.option('--config', '-c', help='Config file location', type=click.STRING)
 @click.option('--verbose', '-v', default=False, is_flag=True, help='Verbose mode')
 @click.option('--yes', '-y', default=False, is_flag=True, help='Answer Yes everywhere')
