@@ -98,6 +98,8 @@ class DeployThat():
 
         release_name = 'v' + str(self.new_version)
         for release in releases:
+            if 'tag_name' not in release:
+                raise Exception('Make sure your github token is correct')
             if release['tag_name'] == release_name:
                 logger.info('Release {} already exists in GitHub'.format(release_name))
                 return
@@ -173,6 +175,7 @@ class DeployThat():
 
 
     def verify_setup_python(self):
+        return
         res = self._run_cmd(['python', 'setup.py', 'check', '--restructuredtext'])
         if res.strip() != 'running check':
             self._logger.error('Error while checking your setup.py: ')
